@@ -55,25 +55,26 @@ st.write("Upload an image to classify and get medicinal remedies.")
 uploaded_file = st.file_uploader("Choose an image...", type=["jpg", "png", "jpeg"])
 
 if uploaded_file is not None and model is not None:
-    image = Image.open(uploaded_file)
-    st.image(image, caption="Uploaded Image", use_column_width=True)
-    
-    # Preprocess and predict
-    processed_image = preprocess_image(image)
-    prediction = model.predict(processed_image)
-    predicted_index = np.argmax(prediction)
-    class_name = class_labels[predicted_index]
+    with st.spinner("Processing image..."):
+        # Preprocess and predict
+        processed_image = preprocess_image(image)
+        prediction = model.predict(processed_image)
+        predicted_index = np.argmax(prediction)
+        class_name = class_labels[predicted_index]
     
     st.write(f"### Predicted Class: {class_name}")
     
     # Display medicinal uses if available
-    utilities = df.iloc[predicted_index]["Utilities"]
-    remedies = df.iloc[predicted_index]["Remedies"]
-    st.write("### Medicinal Uses:")
-    st.write(utilities)
-    st.write("### Remedies:")
-    st.write(remedies)
-    
+    if not df.empty:
+        utilities = df.iloc[predicted_index]["Utilities"]
+        remedies = df.iloc[predicted_index]["Remedies"]
+        st.write("### Medicinal Uses:")
+        st.write(utilities)
+        st.write("### Remedies:")
+        st.write(remedies)
+    else:
+        st.write("### No medicinal data available for this class.")
+
 elif uploaded_file is not None:
     st.error("Model could not be loaded. Please check the logs.")
 
