@@ -77,4 +77,11 @@ if uploaded_file is not None and model is not None:
 
 elif uploaded_file is not None:
     st.error("Model could not be loaded. Please check the logs.")
+# Button to clear cache and restart app
+if st.button("Clear Cache & Restart"):
+    st.experimental_rerun()
+
+# Free memory after prediction
+del model
+tf.keras.backend.clear_session()
 
