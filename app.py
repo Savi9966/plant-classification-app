@@ -67,16 +67,12 @@ if uploaded_file is not None and model is not None:
     st.write(f"### Predicted Class: {class_name}")
     
     # Display medicinal uses if available
-    if not df.empty and str(predicted_index) in df.index.astype(str):
-        row = df.loc[df.index.astype(str) == str(predicted_index)].iloc[0]
-        utilities = row.get("utilities", "No data available")
-        remedies = row.get("Remedy", "No data available")
-        st.write("### Medicinal Uses & Remedies:")
-        st.write(utilities)
-        st.write(remedies)
-    else:
-        st.write("### No medicinal data available for this class.")
-
+    utilities = df.iloc[predicted_index]["Utilities"]
+    remedies = df.iloc[predicted_index]["Remedies"]
+    st.write("### Medicinal Uses & Remedies:")
+    st.write(utilities)
+    st.write(remedies)
+    
 elif uploaded_file is not None:
     st.error("Model could not be loaded. Please check the logs.")
 
