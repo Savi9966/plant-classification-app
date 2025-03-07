@@ -11,8 +11,8 @@ MODEL_URL = "https://drive.google.com/uc?id=1Ollcw9FIVoKABTraEhPEuxbyg2hCmtjS"
 MODEL_PATH = "stacked_model.keras"
 gdown.download(MODEL_URL, MODEL_PATH, quiet=False)
 
-LABELS_PATH = "labels.json"
-CSV_PATH = "medicinal_uses.csv"
+LABELS_PATH = "class_labels.json"
+CSV_PATH = "medicinal_uses(2).csv"
 
 # Load model
 model = tf.keras.models.load_model(MODEL_PATH)
