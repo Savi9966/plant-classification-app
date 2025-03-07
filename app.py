@@ -8,7 +8,6 @@ import os
 from PIL import Image
 
 # Force TensorFlow to use CPU to avoid Streamlit Cloud GPU errors
-import tensorflow.keras.backend as K
 os.environ['CUDA_VISIBLE_DEVICES'] = '-1'
 
 # Define file paths
@@ -21,8 +20,12 @@ MODEL_URL = "https://drive.google.com/uc?id=1Ollcw9FIVoKABTraEhPEuxbyg2hCmtjS"
 if not os.path.exists(MODEL_PATH):
     gdown.download(MODEL_URL, MODEL_PATH, quiet=False)
 
-# Load model
-model = tf.keras.models.load_model(MODEL_PATH)
+# Load model without optimizer issues
+try:
+    model = tf.keras.models.load_model(MODEL_PATH, compile=False)
+except Exception as e:
+    st.error(f"Error loading model: {e}")
+    model = None
 
 # Load class labels with error handling
 try:
@@ -51,7 +54,7 @@ st.write("Upload an image to classify and get medicinal remedies.")
 
 uploaded_file = st.file_uploader("Choose an image...", type=["jpg", "png", "jpeg"])
 
-if uploaded_file is not None:
+if uploaded_file is not None and model is not None:
     image = Image.open(uploaded_file)
     st.image(image, caption="Uploaded Image", use_column_width=True)
     
@@ -64,11 +67,16 @@ if uploaded_file is not None:
     st.write(f"### Predicted Class: {class_name}")
     
     # Display medicinal uses if available
-    if not df.empty and predicted_index < len(df):
-        utilities = df.iloc[predicted_index].get("utilities", "No data available")
-        remedies = df.iloc[predicted_index].get("Remedy", "No data available")
+    if not df.empty and str(predicted_index) in df.index.astype(str):
+        row = df.loc[df.index.astype(str) == str(predicted_index)].iloc[0]
+        utilities = row.get("utilities", "No data available")
+        remedies = row.get("Remedy", "No data available")
         st.write("### Medicinal Uses & Remedies:")
         st.write(utilities)
         st.write(remedies)
     else:
         st.write("### No medicinal data available for this class.")
+
+elif uploaded_file is not None:
+    st.error("Model could not be loaded. Please check the logs.")
+
