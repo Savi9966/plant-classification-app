@@ -69,8 +69,9 @@ if uploaded_file is not None and model is not None:
     # Display medicinal uses if available
     utilities = df.iloc[predicted_index]["Utilities"]
     remedies = df.iloc[predicted_index]["Remedies"]
-    st.write("### Medicinal Uses & Remedies:")
+    st.write("### Medicinal Uses:")
     st.write(utilities)
+    st.write("### Remedies:")
     st.write(remedies)
     
 elif uploaded_file is not None:
