@@ -62,7 +62,7 @@ if uploaded_file is not None and model is not None:
     processed_image = preprocess_image(image)
     prediction = model.predict(processed_image)
     predicted_index = np.argmax(prediction)
-    class_name = class_labels.get(str(predicted_index), "Unknown")
+    class_name = class_labels[predicted_index]
     
     st.write(f"### Predicted Class: {class_name}")
     
