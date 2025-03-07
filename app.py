@@ -22,7 +22,8 @@ with open(LABELS_PATH, "r") as f:
     class_labels = json.load(f)
 
 # Load medicinal uses CSV
-df = pd.read_csv(CSV_PATH)
+df = pd.read_csv(CSV_PATH, encoding="latin1")
+
 
 def preprocess_image(image):
     image = image.resize((224, 224))  # Resize to match model input size
