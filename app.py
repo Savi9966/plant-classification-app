@@ -63,6 +63,7 @@ if uploaded_file is not None and model is not None:
         predicted_index = np.argmax(prediction)
         class_name = class_labels[predicted_index]
     
+    st.image(image, caption="Uploaded Image", use_column_width=True)
     st.write(f"### Predicted Class: {class_name}")
     
     # Display medicinal uses if available
